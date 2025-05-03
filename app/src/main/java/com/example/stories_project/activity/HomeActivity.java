@@ -45,7 +45,12 @@ public class HomeActivity extends AppCompatActivity {
         newBookAdapter = new StoryAdapter();
         comingSoonAdapter = new StoryAdapter();
         categoryAdapter = new CategoryAdapter(category ->
-                Toast.makeText(this, "Đã chọn thể loại: " + category.getName(), Toast.LENGTH_SHORT).show()
+        {
+            Intent intent = new Intent(HomeActivity.this, StoryDetailActivity.class);
+            intent.putExtra("categoryName", category.getName());
+            intent.putExtra("categorySlug", category.getSlug());
+            startActivity(intent);
+        }
         );
         bannerAdapter = new BannerAdapter(story -> {
             Intent intent = new Intent(HomeActivity.this, StoryDetailActivity.class);
@@ -97,15 +102,26 @@ public class HomeActivity extends AppCompatActivity {
         );
 
         binding.newBookShowMore.setOnClickListener(v ->
-                Toast.makeText(this, "Xem thêm truyện mới", Toast.LENGTH_SHORT).show()
+                {
+                    Intent intent = new Intent(HomeActivity.this, StatusStoryListActivity.class);
+                    intent.putExtra("tabIndex", 0); // Truyện mới
+                    startActivity(intent);
+                }
         );
 
         binding.comingSoonShowMore.setOnClickListener(v ->
-                Toast.makeText(this, "Xem thêm sắp ra mắt", Toast.LENGTH_SHORT).show()
+                {
+                    Intent intent = new Intent(HomeActivity.this, StatusStoryListActivity.class);
+                    intent.putExtra("tabIndex", 1); // Sắp ra mắt
+                    startActivity(intent);
+                }
         );
 
         binding.categoryShowMore.setOnClickListener(v ->
-                Toast.makeText(this, "Xem thêm thể loại", Toast.LENGTH_SHORT).show()
+                {
+                    Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
+                    startActivity(intent);
+                }
         );
 
         bannerRunnable = () -> {

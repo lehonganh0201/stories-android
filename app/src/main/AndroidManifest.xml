@@ -17,6 +17,15 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".activity.StatusStoryListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.StoryListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.CategoryListActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.StoryDetailActivity"
             android:exported="false" />
         <activity

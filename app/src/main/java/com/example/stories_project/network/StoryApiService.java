@@ -23,4 +23,10 @@ public interface StoryApiService {
 
     @GET("books/name/{slugName}")
     Call<ApiResponse<Story>> getStory(@Path("slugName") String slugName);
+
+    @GET("books/genres/{slugGenres}")
+    Call<ApiResponse<List<Story>>> getStoriesByGenre(
+            @Path("slugGenres") String slug,
+            @Query("pageNumber") int pageNumber
+    );
 }
