@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.stories_project.databinding.ActivityMainBinding;
 import com.example.stories_project.model.ApiResponse;
@@ -14,6 +14,7 @@ import com.example.stories_project.network.RetrofitClient;
 import com.example.stories_project.ui.StoryAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         storyAdapter = new StoryAdapter();
-        binding.storyRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.storyRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         binding.storyRecyclerView.setAdapter(storyAdapter);
 
         storyAdapter.setOnItemClickListener(new StoryAdapter.OnItemClickListener() {
@@ -40,17 +41,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fetchStories();
+        fetchStories("truyen-moi", 1);
     }
 
-    private void fetchStories() {
+    private void fetchStories(String category, int pageNumber) {
         binding.progressBar.setVisibility(View.VISIBLE);
-        RetrofitClient.getStoryApiService().getStories().enqueue(new Callback<ApiResponse>() {
+        RetrofitClient.getStoryApiService().getStories(category, pageNumber).enqueue(new Callback<ApiResponse<List<Story>>>() {
             @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+            public void onResponse(Call<ApiResponse<List<Story>>> call, Response<ApiResponse<List<Story>>> response) {
                 binding.progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
-                    ApiResponse apiResponse = response.body();
+                    ApiResponse<List<Story>> apiResponse = response.body();
                     if ("SUCCESS".equals(apiResponse.getMeta().getStatus())) {
                         storyAdapter.submitList(apiResponse.getData() != null ? apiResponse.getData() : new ArrayList<>());
                     } else {
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<List<Story>>> call, Throwable t) {
                 binding.progressBar.setVisibility(View.GONE);
                 Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }

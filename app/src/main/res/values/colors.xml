@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="category_color_1">#FF6F61</color> <!-- Đỏ san hô -->
+    <color name="category_color_2">#6B728E</color> <!-- Xám xanh -->
+    <color name="category_color_3">#FFD166</color> <!-- Vàng -->
+    <color name="category_color_4">#06D6A0</color> <!-- Xanh ngọc -->
+    <color name="category_color_5">#118AB2</color> <!-- Xanh dương -->
+    <color name="category_color_6">#EF476F</color> <!-- Hồng -->
 </resources>

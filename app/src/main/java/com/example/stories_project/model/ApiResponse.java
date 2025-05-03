@@ -8,10 +8,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ApiResponse {
+public class ApiResponse<T> {
     @SerializedName("meta")
     private Meta meta;
 
     @SerializedName("data")
-    private List<Story> data;
+    private T data;
 }

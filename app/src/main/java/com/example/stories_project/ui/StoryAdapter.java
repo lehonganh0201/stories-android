@@ -1,5 +1,6 @@
 package com.example.stories_project.ui;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.example.stories_project.R;
+import com.example.stories_project.activity.StoryDetailActivity;
 import com.example.stories_project.databinding.ItemStoryBinding;
 import com.example.stories_project.model.Category;
 import com.example.stories_project.model.Story;
@@ -71,8 +73,12 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
             binding.getRoot().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (listener != null && getAdapterPosition() != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(stories.get(getAdapterPosition()));
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        Story story = stories.get(position);
+                        Intent intent = new Intent(itemView.getContext(), StoryDetailActivity.class);
+                        intent.putExtra("slugName", story.getSlug());
+                        itemView.getContext().startActivity(intent);
                     }
                 }
             });
@@ -86,8 +92,6 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.StoryViewHol
                 categoryNames.add(category.getName());
             }
             binding.storyCategories.setText(String.join(", ", categoryNames));
-
-            binding.storyStatus.setText("Status: " + story.getStatus());
 
             String thumbnailUrl = IMAGE_BASE_URL + story.getThumbnail();
             Log.d("StoryAdapter", "Loading image: " + thumbnailUrl);
