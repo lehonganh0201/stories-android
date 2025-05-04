@@ -1,5 +1,7 @@
 package com.example.stories_project.network.request;
 
+import java.io.Serializable;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +14,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountRequest {
+public class AccountRequest implements Serializable {
     String username;
 
     String password;

@@ -11,72 +11,52 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
-        android:text="Đăng Ký"
+        android:text="Thiết Lập Tài Khoản"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="#000000" />
 
     <EditText
-        android:id="@+id/etFullName"
+        android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvTitle"
         android:layout_marginTop="40dp"
-        android:hint="Họ và tên"
+        android:hint="Tên đăng nhập"
         android:padding="12dp"
         android:background="@drawable/edittext_background"
-        android:inputType="textPersonName" />
+        android:inputType="text" />
 
     <EditText
-        android:id="@+id/etPhoneNumber"
+        android:id="@+id/etPassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etFullName"
+        android:layout_below="@id/etUsername"
         android:layout_marginTop="20dp"
-        android:hint="Số điện thoại"
+        android:hint="Mật khẩu"
         android:padding="12dp"
         android:background="@drawable/edittext_background"
-        android:inputType="phone" />
+        android:inputType="textPassword" />
 
     <EditText
-        android:id="@+id/etDateOfBirth"
+        android:id="@+id/etEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etPhoneNumber"
+        android:layout_below="@id/etPassword"
         android:layout_marginTop="20dp"
-        android:hint="Ngày sinh (dd/MM/yyyy)"
+        android:hint="Email"
         android:padding="12dp"
         android:background="@drawable/edittext_background"
-        android:inputType="date" />
-
-    <Spinner
-        android:id="@+id/spGender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/etDateOfBirth"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/edittext_background"
-        android:padding="12dp" />
+        android:inputType="textEmailAddress" />
 
     <Button
-        android:id="@+id/btnContinue"
+        android:id="@+id/btnComplete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/spGender"
+        android:layout_below="@id/etEmail"
         android:layout_marginTop="30dp"
-        android:text="Tiếp tục"
+        android:text="Hoàn tất"
         android:backgroundTint="#2196F3"
         android:textColor="#FFFFFF"
         android:padding="12dp" />
-
-    <TextView
-        android:id="@+id/tvLogin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/btnContinue"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:text="Đã có tài khoản? Đăng nhập"
-        android:textColor="#2196F3"
-        android:textSize="16sp" />
 </RelativeLayout>

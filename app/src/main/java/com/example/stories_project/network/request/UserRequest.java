@@ -1,5 +1,6 @@
 package com.example.stories_project.network.request;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import lombok.AccessLevel;
@@ -14,12 +15,12 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserRequest {
+public class UserRequest implements Serializable {
     String fullName;
 
     String phoneNumber;
 
-    LocalDateTime dateOfBirth;
+    String dateOfBirth;
 
     String gender;
 }
