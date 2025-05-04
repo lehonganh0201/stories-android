@@ -10,4 +10,5 @@ import lombok.Setter;
 public class Meta {
     @SerializedName("status")
     private String status;
+    private String message;
 }

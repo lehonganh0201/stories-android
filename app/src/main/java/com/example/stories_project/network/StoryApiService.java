@@ -5,6 +5,12 @@ import com.example.stories_project.model.Category;
 import com.example.stories_project.model.ChapterReader;
 import com.example.stories_project.model.Story;
 import com.example.stories_project.network.request.ChapterRequest;
+import com.example.stories_project.network.request.ForgotPasswordRequest;
+import com.example.stories_project.network.request.LoginRequest;
+import com.example.stories_project.network.request.RegisterRequest;
+import com.example.stories_project.network.request.ResetPasswordRequest;
+import com.example.stories_project.network.request.VerifyOtpRequest;
+import com.example.stories_project.network.response.AccountResponse;
 import com.example.stories_project.network.response.ChapterResponse;
 
 import java.util.List;
@@ -45,4 +51,21 @@ public interface StoryApiService {
     Call<ApiResponse<List<Story>>> searchStoryByKeyword(
             @Query("keywords") String keywords
     );
+
+    @POST("auths/register")
+    Call<ApiResponse<AccountResponse>> register(@Body RegisterRequest request);
+
+    @POST("auths/login")
+    Call<ApiResponse<AccountResponse>> login(@Body LoginRequest request);
+
+    @POST("auths/verify-otp")
+    Call<ApiResponse<AccountResponse>> verifyOtp(@Body VerifyOtpRequest request);
+
+    @POST("auths/forgot-password")
+    Call<ApiResponse<AccountResponse>> forgotPassword(@Body ForgotPasswordRequest request);
+
+    @POST("auths/reset-password")
+    Call<ApiResponse<AccountResponse>> resetPassword(@Body ResetPasswordRequest request);
+
+
 }

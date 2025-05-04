@@ -1,71 +1,78 @@
 package com.example.stories_project;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 
-import com.example.stories_project.databinding.ActivityMainBinding;
-import com.example.stories_project.model.ApiResponse;
-import com.example.stories_project.model.Story;
-import com.example.stories_project.network.RetrofitClient;
-import com.example.stories_project.ui.StoryAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.example.stories_project.activity.ForgotPasswordActivity;
+import com.example.stories_project.activity.RegisterActivity;
 
 public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
-    private StoryAdapter storyAdapter;
+    private EditText etUsername, etPassword;
+    private ImageView ivTogglePassword;
+    private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_main);
 
-        storyAdapter = new StoryAdapter();
-        binding.storyRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        binding.storyRecyclerView.setAdapter(storyAdapter);
+        etUsername = findViewById(R.id.etUsername);
+        etPassword = findViewById(R.id.etPassword);
+        ivTogglePassword = findViewById(R.id.ivTogglePassword);
+        Button btnLogin = findViewById(R.id.btnLogin);
+        TextView tvRegister = findViewById(R.id.tvRegister);
+        TextView tvForgotPassword = findViewById(R.id.tvForgotPassword);
 
-        storyAdapter.setOnItemClickListener(new StoryAdapter.OnItemClickListener() {
+        ivTogglePassword.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(Story story) {
-                Toast.makeText(MainActivity.this, "Clicked: " + story.getName(), Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                isPasswordVisible = !isPasswordVisible;
+                if (isPasswordVisible) {
+                    etPassword.setTransformationMethod(null);
+                    ivTogglePassword.setImageResource(R.drawable.ic_eye_off);
+                } else {
+                    etPassword.setTransformationMethod(new PasswordTransformationMethod());
+                    ivTogglePassword.setImageResource(R.drawable.ic_eye_on);
+                }
+                etPassword.setSelection(etPassword.getText().length());
             }
         });
 
-        fetchStories("truyen-moi", 1);
-    }
-
-    private void fetchStories(String category, int pageNumber) {
-        binding.progressBar.setVisibility(View.VISIBLE);
-        RetrofitClient.getStoryApiService().getStories(category, pageNumber).enqueue(new Callback<ApiResponse<List<Story>>>() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<ApiResponse<List<Story>>> call, Response<ApiResponse<List<Story>>> response) {
-                binding.progressBar.setVisibility(View.GONE);
-                if (response.isSuccessful() && response.body() != null) {
-                    ApiResponse<List<Story>> apiResponse = response.body();
-                    if ("SUCCESS".equals(apiResponse.getMeta().getStatus())) {
-                        storyAdapter.submitList(apiResponse.getData() != null ? apiResponse.getData() : new ArrayList<>());
-                    } else {
-                        Toast.makeText(MainActivity.this, "API Error: Invalid status", Toast.LENGTH_SHORT).show();
-                    }
+            public void onClick(View v) {
+                String username = etUsername.getText().toString().trim();
+                String password = etPassword.getText().toString().trim();
+
+                if (username.isEmpty() || password.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(MainActivity.this, "Error: " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
 
+        tvRegister.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onFailure(Call<ApiResponse<List<Story>>> call, Throwable t) {
-                binding.progressBar.setVisibility(View.GONE);
-                Toast.makeText(MainActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        tvForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ForgotPasswordActivity.class);
+                startActivity(intent);
             }
         });
     }

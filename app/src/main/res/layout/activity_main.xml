@@ -1,67 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingLeft="16dp"
-    android:background="@android:color/white"
-    android:fitsSystemWindows="true">
+    android:padding="16dp"
+    android:background="#F5F5F5">
 
-    <!-- Header: Tiêu đề và biểu tượng tìm kiếm -->
-    <LinearLayout
+    <!-- Logo hoặc tiêu đề -->
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:text="Đăng Nhập"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#000000" />
+
+    <!-- Trường nhập tên đăng nhập -->
+    <EditText
+        android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:layout_below="@id/tvTitle"
+        android:layout_marginTop="40dp"
+        android:hint="Tên đăng nhập"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background"
+        android:inputType="text" />
 
-        <!-- Tiêu đề -->
-        <TextView
-            android:id="@+id/titleTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Danh sách truyện"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
-
-        <!-- Biểu tượng tìm kiếm -->
-        <ImageButton
-            android:id="@+id/searchButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_search"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Tìm kiếm"
-            android:padding="12dp" />
-
-    </LinearLayout>
-
-    <!-- FrameLayout để chứa RecyclerView và ProgressBar -->
-    <FrameLayout
+    <!-- Trường nhập mật khẩu -->
+    <RelativeLayout
+        android:id="@+id/passwordContainer"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etUsername"
+        android:layout_marginTop="20dp">
 
-        <!-- RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/storyRecyclerView"
+        <EditText
+            android:id="@+id/etPassword"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"
-            android:clipToPadding="false" />
-
-        <!-- ProgressBar -->
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:hint="Mật khẩu"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:inputType="textPassword" />
 
-    </FrameLayout>
+        <ImageView
+            android:id="@+id/ivTogglePassword"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="12dp"
+            android:src="@drawable/ic_eye_on"
+            android:contentDescription="Bật/tắt hiển thị mật khẩu" />
+    </RelativeLayout>
 
-</LinearLayout>
+    <!-- Nút đăng nhập -->
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/passwordContainer"
+        android:layout_marginTop="30dp"
+        android:text="Đăng Nhập"
+        android:backgroundTint="#2196F3"
+        android:textColor="#FFFFFF"
+        android:padding="12dp" />
+
+    <!-- Liên kết đăng ký -->
+    <TextView
+        android:id="@+id/tvRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/btnLogin"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Chưa có tài khoản? Đăng ký"
+        android:textColor="#2196F3"
+        android:textSize="16sp" />
+
+    <!-- Liên kết quên mật khẩu -->
+    <TextView
+        android:id="@+id/tvForgotPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRegister"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:text="Quên mật khẩu?"
+        android:textColor="#2196F3"
+        android:textSize="16sp" />
+</RelativeLayout>
