@@ -5,7 +5,6 @@
     android:padding="16dp"
     android:background="#F5F5F5">
 
-    <!-- Logo hoặc tiêu đề -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -17,7 +16,6 @@
         android:textStyle="bold"
         android:textColor="#000000" />
 
-    <!-- Trường nhập tên đăng nhập -->
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
@@ -29,7 +27,6 @@
         android:background="@drawable/edittext_background"
         android:inputType="text" />
 
-    <!-- Trường nhập mật khẩu -->
     <RelativeLayout
         android:id="@+id/passwordContainer"
         android:layout_width="match_parent"
@@ -57,19 +54,26 @@
             android:contentDescription="Bật/tắt hiển thị mật khẩu" />
     </RelativeLayout>
 
-    <!-- Nút đăng nhập -->
+    <CheckBox
+        android:id="@+id/cbRememberMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/passwordContainer"
+        android:layout_marginTop="10dp"
+        android:text="Nhớ tôi"
+        android:checked="false" />
+
     <Button
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/passwordContainer"
-        android:layout_marginTop="30dp"
+        android:layout_below="@id/cbRememberMe"
+        android:layout_marginTop="20dp"
         android:text="Đăng Nhập"
         android:backgroundTint="#2196F3"
         android:textColor="#FFFFFF"
         android:padding="12dp" />
 
-    <!-- Liên kết đăng ký -->
     <TextView
         android:id="@+id/tvRegister"
         android:layout_width="wrap_content"
@@ -81,7 +85,6 @@
         android:textColor="#2196F3"
         android:textSize="16sp" />
 
-    <!-- Liên kết quên mật khẩu -->
     <TextView
         android:id="@+id/tvForgotPassword"
         android:layout_width="wrap_content"
