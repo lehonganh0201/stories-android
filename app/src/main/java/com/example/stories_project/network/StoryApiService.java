@@ -5,6 +5,7 @@ import com.example.stories_project.model.Category;
 import com.example.stories_project.model.ChapterReader;
 import com.example.stories_project.model.Story;
 import com.example.stories_project.network.request.ChapterRequest;
+import com.example.stories_project.network.response.ChapterResponse;
 
 import java.util.List;
 
@@ -36,4 +37,7 @@ public interface StoryApiService {
 
     @POST("chapters")
     Call<ApiResponse<ChapterReader>> getChapterDetail(@Body ChapterRequest request);
+
+    @GET("chapters/{slugName}")
+    Call<ApiResponse<List<ChapterResponse>>> getAllChapters(@Path("slugName") String slugName);
 }
