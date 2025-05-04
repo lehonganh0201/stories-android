@@ -1,5 +1,6 @@
 package com.example.stories_project.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -37,7 +38,11 @@ public class StoryDetailActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         chapterAdapter = new ChapterAdapter(chapter -> {
-            Toast.makeText(this, "Đã chọn chương: " + chapter.getChapterName(), Toast.LENGTH_SHORT).show();
+            {
+                Intent intent = new Intent(StoryDetailActivity.this, ChapterReaderActivity.class);
+                intent.putExtra("chapterData", chapter.getChapterApiData());
+                startActivity(intent);
+            }
         });
         binding.chapterRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.chapterRecyclerView.setAdapter(chapterAdapter);

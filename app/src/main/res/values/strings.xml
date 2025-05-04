@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Stories-Project</string>
+    <string name="chapter_image">Chapter Image</string>
 </resources>

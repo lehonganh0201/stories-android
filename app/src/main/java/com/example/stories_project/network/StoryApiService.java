@@ -2,12 +2,16 @@ package com.example.stories_project.network;
 
 import com.example.stories_project.model.ApiResponse;
 import com.example.stories_project.model.Category;
+import com.example.stories_project.model.ChapterReader;
 import com.example.stories_project.model.Story;
+import com.example.stories_project.network.request.ChapterRequest;
 
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -29,4 +33,7 @@ public interface StoryApiService {
             @Path("slugGenres") String slug,
             @Query("pageNumber") int pageNumber
     );
+
+    @POST("chapters")
+    Call<ApiResponse<ChapterReader>> getChapterDetail(@Body ChapterRequest request);
 }

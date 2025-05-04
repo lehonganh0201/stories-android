@@ -18,7 +18,6 @@ import com.example.stories_project.model.Story;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerViewHolder> {
     private List<Story> stories = new ArrayList<>();
