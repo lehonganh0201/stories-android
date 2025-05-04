@@ -1,11 +1,11 @@
 package com.example.stories_project.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.example.stories_project.databinding.ActivityCategoryListBinding;
 import com.example.stories_project.model.ApiResponse;
@@ -41,6 +41,13 @@ public class CategoryListActivity extends AppCompatActivity {
         layoutManager.setJustifyContent(JustifyContent.FLEX_START);
         binding.categoryRecyclerView.setLayoutManager(layoutManager);
         binding.categoryRecyclerView.setAdapter(categoryAdapter);
+
+        binding.searchButton.setOnClickListener(v ->
+                {
+                    Intent intent = new Intent(CategoryListActivity.this, SearchActivity.class);
+                    startActivity(intent);
+                }
+        );
 
         fetchCategories();
     }

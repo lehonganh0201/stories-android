@@ -1,5 +1,6 @@
 package com.example.stories_project.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -41,7 +42,12 @@ public class StatusStoryListActivity extends AppCompatActivity {
 
         viewPager.setCurrentItem(selectedTabIndex);
 
-        searchButton.setOnClickListener(v -> showToast("Chức năng tìm kiếm chưa được triển khai"));
+        searchButton.setOnClickListener(v ->
+                {
+                    Intent intent = new Intent(StatusStoryListActivity.this, SearchActivity.class);
+                    startActivity(intent);
+                }
+        );
         bellButton.setOnClickListener(v -> showToast("Chức năng thông báo chưa được triển khai"));
     }
 

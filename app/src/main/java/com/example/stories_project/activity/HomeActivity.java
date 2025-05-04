@@ -94,7 +94,10 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         binding.searchButton.setOnClickListener(v ->
-                Toast.makeText(this, "Tìm kiếm được nhấn", Toast.LENGTH_SHORT).show()
+                {
+                    Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+                    startActivity(intent);
+                }
         );
 
         binding.bellButton.setOnClickListener(v ->

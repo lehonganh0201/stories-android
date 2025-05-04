@@ -1,5 +1,6 @@
 package com.example.stories_project.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -15,7 +16,6 @@ import com.example.stories_project.R;
 import com.example.stories_project.model.ApiResponse;
 import com.example.stories_project.model.Story;
 import com.example.stories_project.network.RetrofitClient;
-import com.example.stories_project.network.StoryApiService;
 import com.example.stories_project.ui.StoryAdapter;
 
 import java.util.ArrayList;
@@ -90,7 +90,12 @@ public class StoryListActivity extends AppCompatActivity {
             }
         });
 
-        searchButton.setOnClickListener(v -> showError("Chức năng tìm kiếm chưa được triển khai"));
+        searchButton.setOnClickListener(v ->
+                {
+                    Intent intent = new Intent(StoryListActivity.this, SearchActivity.class);
+                    startActivity(intent);
+                }
+        );
         bellButton.setOnClickListener(v -> showError("Chức năng thông báo chưa được triển khai"));
 
         if (categorySlug != null) {

@@ -40,4 +40,9 @@ public interface StoryApiService {
 
     @GET("chapters/{slugName}")
     Call<ApiResponse<List<ChapterResponse>>> getAllChapters(@Path("slugName") String slugName);
+
+    @GET("books/search")
+    Call<ApiResponse<List<Story>>> searchStoryByKeyword(
+            @Query("keywords") String keywords
+    );
 }
