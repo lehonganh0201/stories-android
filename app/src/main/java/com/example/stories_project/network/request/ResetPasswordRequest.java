@@ -15,7 +15,5 @@ import lombok.experimental.FieldDefaults;
 public class ResetPasswordRequest {
     String email;
 
-    String otp;
-
     String newPassword;
 }

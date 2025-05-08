@@ -67,6 +67,7 @@ public class AccountSetupActivity extends AppCompatActivity {
                             Toast.makeText(AccountSetupActivity.this, "Gửi yêu cầu đăng ký thành công, vui lòng kiểm tra email để lấy mã OTP", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(AccountSetupActivity.this, OtpVerificationActivity.class);
                             intent.putExtra("email", email);
+                            intent.putExtra("source", "registration");
                             startActivity(intent);
                             finish();
                         } else {

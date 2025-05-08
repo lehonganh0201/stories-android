@@ -13,9 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.stories_project.MainActivity;
 import com.example.stories_project.R;
 import com.example.stories_project.model.ApiResponse;
+import com.example.stories_project.network.RetrofitClient;
 import com.example.stories_project.network.request.VerifyOtpRequest;
 import com.example.stories_project.network.response.AccountResponse;
-import com.example.stories_project.network.RetrofitClient;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,6 +27,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
     private TextView tvTimer, tvEmail;
     private CountDownTimer countDownTimer;
     private String email;
+    private String source;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,7 @@ public class OtpVerificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_otp_verification);
 
         email = getIntent().getStringExtra("email");
+        source = getIntent().getStringExtra("source"); // Get the source (e.g., "registration" or "forgot_password")
 
         etOtp = findViewById(R.id.etOtp);
         btnVerify = findViewById(R.id.btnVerify);
@@ -63,7 +65,14 @@ public class OtpVerificationActivity extends AppCompatActivity {
                         if (response.isSuccessful() && response.body() != null && response.body().getMeta().getStatus().equals("SUCCESS")) {
                             countDownTimer.cancel();
                             Toast.makeText(OtpVerificationActivity.this, "Xác minh OTP thành công", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(OtpVerificationActivity.this, MainActivity.class);
+
+                            Intent intent;
+                            if ("forgot_password".equals(source)) {
+                                intent = new Intent(OtpVerificationActivity.this, ResetPasswordActivity.class);
+                                intent.putExtra("email", email);
+                            } else {
+                                intent = new Intent(OtpVerificationActivity.this, MainActivity.class);
+                            }
                             startActivity(intent);
                             finish();
                         } else {
