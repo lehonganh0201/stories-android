@@ -1,6 +1,7 @@
 package com.example.stories_project.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -18,7 +20,9 @@ import com.example.stories_project.model.Category;
 import com.example.stories_project.model.Chapter;
 import com.example.stories_project.model.Story;
 import com.example.stories_project.network.RetrofitClient;
+import com.example.stories_project.network.request.UserFavoriteRequest;
 import com.example.stories_project.network.response.ChapterResponse;
+import com.example.stories_project.network.response.UserStoryFavoriteResponse;
 import com.example.stories_project.ui.ChapterAdapter;
 
 import java.util.ArrayList;
@@ -34,6 +38,11 @@ public class StoryDetailActivity extends AppCompatActivity {
     private ChapterAdapter chapterAdapter;
     private static final String IMAGE_BASE_URL = "https://img.otruyenapi.com/uploads/comics/";
     private List<String> chapterPaths = new ArrayList<>();
+    private List<Chapter> chapters = new ArrayList<>();
+    private boolean isFavorited = false;
+
+    private static final String PREF_NAME = "UserPrefs";
+    private static final String KEY_USERNAME = "username";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +67,116 @@ public class StoryDetailActivity extends AppCompatActivity {
             return;
         }
 
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        String username = prefs.getString(KEY_USERNAME, "");
+        if (username.isEmpty()) {
+            Toast.makeText(this, "Vui lòng đăng nhập để thích truyện!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        checkFavoriteStatus(username, slugName);
+
+        binding.readButton.setOnClickListener(v -> {
+            if (!chapters.isEmpty()) {
+                Chapter firstChapter = chapters.get(0);
+                Intent intent = new Intent(StoryDetailActivity.this, ChapterReaderActivity.class);
+                intent.putExtra("chapterData", firstChapter.getChapterApiData());
+                intent.putExtra("slugName", slugName);
+                intent.putStringArrayListExtra("chapterPaths", new ArrayList<>(chapterPaths));
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Chưa có chapter nào", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.likeButton.setOnClickListener(v -> {
+            binding.likeButton.setEnabled(false);
+            UserFavoriteRequest request = new UserFavoriteRequest(username, slugName);
+            if (isFavorited) {
+                RetrofitClient.getStoryApiService().removeFavorite(request).enqueue(new Callback<ApiResponse<Void>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<Void>> call, Response<ApiResponse<Void>> response) {
+                        if (response.code() == 204) {
+                            checkFavoriteStatus(username, slugName);
+                            Toast.makeText(StoryDetailActivity.this, "Đã xóa khỏi danh sách yêu thích!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            binding.likeButton.setEnabled(true);
+                            Toast.makeText(StoryDetailActivity.this, "Lỗi: " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
+                        binding.likeButton.setEnabled(true);
+                        Toast.makeText(StoryDetailActivity.this, "Lỗi khi xóa favorite: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                RetrofitClient.getStoryApiService().saveFavorite(request).enqueue(new Callback<ApiResponse<UserStoryFavoriteResponse>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<UserStoryFavoriteResponse>> call, Response<ApiResponse<UserStoryFavoriteResponse>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            ApiResponse<UserStoryFavoriteResponse> apiResponse = response.body();
+                            if ("SUCCESS".equals(apiResponse.getMeta().getStatus())) {
+                                checkFavoriteStatus(username, slugName);
+                                Toast.makeText(StoryDetailActivity.this, "Đã thêm vào danh sách yêu thích!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                binding.likeButton.setEnabled(true);
+                                Toast.makeText(StoryDetailActivity.this, "Lỗi: " + apiResponse.getMeta().getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            binding.likeButton.setEnabled(true);
+                            Toast.makeText(StoryDetailActivity.this, "Lỗi: " + response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<UserStoryFavoriteResponse>> call, Throwable t) {
+                        binding.likeButton.setEnabled(true);
+                        Toast.makeText(StoryDetailActivity.this, "Lỗi khi thêm favorite: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        binding.downloadButton.setOnClickListener(v -> {
+            Toast.makeText(this, "Bắt đầu tải truyện!", Toast.LENGTH_SHORT).show();
+        });
+
         fetchStoryDetails(slugName);
         fetchChapterPaths(slugName);
+    }
+
+    private void checkFavoriteStatus(String username, String slugName) {
+        UserFavoriteRequest request = new UserFavoriteRequest(username, slugName);
+        RetrofitClient.getStoryApiService().isStoryFavorited(request).enqueue(new Callback<ApiResponse<Boolean>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<Boolean>> call, Response<ApiResponse<Boolean>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    ApiResponse<Boolean> apiResponse = response.body();
+                    if ("SUCCESS".equals(apiResponse.getMeta().getStatus()) && apiResponse.getData() != null) {
+                        isFavorited = apiResponse.getData();
+                        int iconRes = isFavorited ? R.drawable.ic_favorite_active : R.drawable.ic_favorite_default;
+                        binding.likeButton.setIconTintResource(isFavorited ? R.color.favorite_active_tint : R.color.favorite_default_tint);
+                        binding.likeButton.setIcon(ContextCompat.getDrawable(StoryDetailActivity.this, iconRes));
+                        binding.likeButton.setEnabled(true);
+                        Log.d("StoryDetailActivity", "Favorite status: " + isFavorited + ", Icon set: " + iconRes);
+                    } else {
+                        Toast.makeText(StoryDetailActivity.this, "Lỗi khi kiểm tra trạng thái yêu thích: " + apiResponse.getMeta().getMessage(), Toast.LENGTH_SHORT).show();
+                        binding.likeButton.setEnabled(true);
+                    }
+                } else {
+                    Toast.makeText(StoryDetailActivity.this, "Lỗi: " + response.message(), Toast.LENGTH_SHORT).show();
+                    binding.likeButton.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<Boolean>> call, Throwable t) {
+                Toast.makeText(StoryDetailActivity.this, "Lỗi khi kiểm tra trạng thái: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                binding.likeButton.setEnabled(true);
+            }
+        });
     }
 
     private void fetchStoryDetails(String slugName) {
@@ -107,13 +224,10 @@ public class StoryDetailActivity extends AppCompatActivity {
                         List<ChapterResponse> chapterResponse = apiResponse.getData();
                         if (chapterResponse != null) {
                             chapterPaths.clear();
-
                             for (ChapterResponse chapter : chapterResponse) {
                                 chapterPaths.add(chapter.getChapterData());
                             }
-
                             java.util.Collections.reverse(chapterPaths);
-
                             Log.d("StoryDetailActivity", "Fetched chapterPaths: " + chapterPaths);
                         }
                     }
@@ -144,8 +258,10 @@ public class StoryDetailActivity extends AppCompatActivity {
                 .into(binding.storyThumbnail);
 
         if (story.getChapters() != null && !story.getChapters().isEmpty()) {
-            chapterAdapter.submitList(story.getChapters().get(0).getServerData());
+            chapters = story.getChapters().get(0).getServerData();
+            chapterAdapter.submitList(chapters);
         } else {
+            chapters.clear();
             chapterAdapter.submitList(new ArrayList<>());
         }
     }

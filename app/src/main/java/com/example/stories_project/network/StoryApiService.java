@@ -9,14 +9,19 @@ import com.example.stories_project.network.request.ForgotPasswordRequest;
 import com.example.stories_project.network.request.LoginRequest;
 import com.example.stories_project.network.request.RegisterRequest;
 import com.example.stories_project.network.request.ResetPasswordRequest;
+import com.example.stories_project.network.request.UserFavoriteRequest;
+import com.example.stories_project.network.request.UserHistoryRequest;
 import com.example.stories_project.network.request.VerifyOtpRequest;
 import com.example.stories_project.network.response.AccountResponse;
 import com.example.stories_project.network.response.ChapterResponse;
+import com.example.stories_project.network.response.UserStoryFavoriteResponse;
+import com.example.stories_project.network.response.UserStoryHistoryResponse;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -67,5 +72,24 @@ public interface StoryApiService {
     @POST("auths/reset-password")
     Call<ApiResponse<AccountResponse>> resetPassword(@Body ResetPasswordRequest request);
 
+    @POST("favorites")
+    Call<ApiResponse<UserStoryFavoriteResponse>> saveFavorite(@Body UserFavoriteRequest request);
 
+    @POST("favorites/remove")
+    Call<ApiResponse<Void>> removeFavorite(@Body UserFavoriteRequest request);
+
+    @GET("favorites/{username}")
+    Call<ApiResponse<List<UserStoryFavoriteResponse>>> getUserFavorites(@Path("username") String username);
+
+    @POST("favorites/check")
+    Call<ApiResponse<Boolean>> isStoryFavorited(@Body UserFavoriteRequest request);
+
+    @POST("histories")
+    Call<ApiResponse<UserStoryHistoryResponse>> saveUserHistory(@Body UserHistoryRequest request);
+
+    @GET("histories/{username}")
+    Call<ApiResponse<List<UserStoryHistoryResponse>>> getUserHistory(@Path("username") String username);
+
+    @POST("histories/last-read")
+    Call<ApiResponse<UserStoryHistoryResponse>> getLastReadChapter(@Body UserHistoryRequest request);
 }

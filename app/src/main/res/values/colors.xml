@@ -8,4 +8,6 @@
     <color name="category_color_4">#06D6A0</color> <!-- Xanh ngọc -->
     <color name="category_color_5">#118AB2</color> <!-- Xanh dương -->
     <color name="category_color_6">#EF476F</color> <!-- Hồng -->
+    <color name="favorite_active_tint">#FF0000</color> <!-- Màu đỏ cho ic_favorite_active -->
+    <color name="favorite_default_tint">#FFFFFF</color> <!-- Màu trắng cho ic_favorite_default -->
 </resources>
