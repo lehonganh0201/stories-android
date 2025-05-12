@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true">
 
-    <!-- Header: Tiêu đề, tìm kiếm, chuông thông báo -->
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="16dp"
-        android:layout_gravity="center"
         android:paddingEnd="16dp"
-        android:paddingTop="16dp">
+        android:paddingTop="16dp"
+        android:layout_gravity="center">
 
         <TextView
             android:id="@+id/titleTextView"
@@ -23,7 +25,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:text="AntiCP"
+            android:text="Danh sách yêu thích"
             android:textColor="@android:color/black"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -41,23 +43,12 @@
             android:id="@+id/bellButton"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/circle_avatar"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Thông báo"
             android:padding="12dp"
+            android:src="@drawable/circle_avatar"
             android:scaleType="centerCrop" />
-
     </LinearLayout>
-
-    <!-- Tiêu đề -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Danh sách thể loại"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:layout_marginBottom="16dp" />
 
     <!-- ProgressBar -->
     <ProgressBar
@@ -69,9 +60,11 @@
 
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/categoryRecyclerView"
+        android:id="@+id/favoritesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:padding="8dp" />
 
 </LinearLayout>

@@ -1,16 +1,23 @@
 package com.example.stories_project.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.PopupWindow;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.stories_project.MainActivity;
+import com.example.stories_project.R;
 import com.example.stories_project.databinding.ActivityHomeBinding;
 import com.example.stories_project.model.ApiResponse;
 import com.example.stories_project.model.Category;
@@ -19,10 +26,8 @@ import com.example.stories_project.network.RetrofitClient;
 import com.example.stories_project.ui.BannerAdapter;
 import com.example.stories_project.ui.CategoryAdapter;
 import com.example.stories_project.ui.StoryAdapter;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +40,10 @@ public class HomeActivity extends AppCompatActivity {
     private Handler bannerHandler = new Handler(Looper.getMainLooper());
     private Runnable bannerRunnable;
     private static final long BANNER_INTERVAL = 4000;
+    private PopupWindow popupWindow;
+    private boolean isMenuShowing = false;
+    private static final String PREF_NAME = "UserPrefs";
+    private View overlayView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +53,12 @@ public class HomeActivity extends AppCompatActivity {
 
         newBookAdapter = new StoryAdapter();
         comingSoonAdapter = new StoryAdapter();
-        categoryAdapter = new CategoryAdapter(category ->
-        {
+        categoryAdapter = new CategoryAdapter(category -> {
             Intent intent = new Intent(HomeActivity.this, StoryDetailActivity.class);
             intent.putExtra("categoryName", category.getName());
             intent.putExtra("categorySlug", category.getSlug());
             startActivity(intent);
-        }
-        );
+        });
         bannerAdapter = new BannerAdapter(story -> {
             Intent intent = new Intent(HomeActivity.this, StoryDetailActivity.class);
             intent.putExtra("slugName", story.getSlug());
@@ -93,39 +100,35 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        binding.searchButton.setOnClickListener(v ->
-                {
-                    Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
-                    startActivity(intent);
-                }
-        );
+        binding.searchButton.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
+            startActivity(intent);
+        });
 
-        binding.bellButton.setOnClickListener(v ->
-                Toast.makeText(this, "Thông báo được nhấn", Toast.LENGTH_SHORT).show()
-        );
+        binding.bellButton.setOnClickListener(v -> {
+            if (isMenuShowing) {
+                dismissMenu();
+            } else {
+                showProfileMenu();
+            }
+        });
 
-        binding.newBookShowMore.setOnClickListener(v ->
-                {
-                    Intent intent = new Intent(HomeActivity.this, StatusStoryListActivity.class);
-                    intent.putExtra("tabIndex", 0); // Truyện mới
-                    startActivity(intent);
-                }
-        );
+        binding.newBookShowMore.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, StatusStoryListActivity.class);
+            intent.putExtra("tabIndex", 0); // Truyện mới
+            startActivity(intent);
+        });
 
-        binding.comingSoonShowMore.setOnClickListener(v ->
-                {
-                    Intent intent = new Intent(HomeActivity.this, StatusStoryListActivity.class);
-                    intent.putExtra("tabIndex", 1); // Sắp ra mắt
-                    startActivity(intent);
-                }
-        );
+        binding.comingSoonShowMore.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, StatusStoryListActivity.class);
+            intent.putExtra("tabIndex", 1); // Sắp ra mắt
+            startActivity(intent);
+        });
 
-        binding.categoryShowMore.setOnClickListener(v ->
-                {
-                    Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
-                    startActivity(intent);
-                }
-        );
+        binding.categoryShowMore.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, CategoryListActivity.class);
+            startActivity(intent);
+        });
 
         bannerRunnable = () -> {
             int currentItem = binding.bannerViewPager.getCurrentItem();
@@ -141,6 +144,84 @@ public class HomeActivity extends AppCompatActivity {
         fetchComingSoonBooks();
         fetchCategories();
         fetchBannerBooks();
+    }
+
+    private void showProfileMenu() {
+        View menuView = LayoutInflater.from(this).inflate(R.layout.menu_profile, null);
+
+        popupWindow = new PopupWindow(menuView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        popupWindow.setElevation(8f);
+
+        overlayView = new View(this);
+        overlayView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        overlayView.setBackgroundColor(0x20000000);
+        overlayView.setClickable(true);
+
+        ViewGroup decorView = (ViewGroup) getWindow().getDecorView();
+        decorView.addView(overlayView);
+
+        overlayView.setOnClickListener(v -> dismissMenu());
+
+        menuView.findViewById(R.id.menu_account_info).setOnClickListener(v -> {
+            Toast.makeText(this, "Thông tin tài khoản clicked", Toast.LENGTH_SHORT).show();
+            // TODO: Navigate to AccountInfoActivity
+            // Intent intent = new Intent(HomeActivity.this, AccountInfoActivity.class);
+            // startActivity(intent);
+            dismissMenu();
+        });
+
+        menuView.findViewById(R.id.menu_favorites).setOnClickListener(v -> {
+            // TODO: Navigate to FavoritesActivity
+             Intent intent = new Intent(HomeActivity.this, FavoritesActivity.class);
+             startActivity(intent);
+             dismissMenu();
+        });
+
+        menuView.findViewById(R.id.menu_reading_history).setOnClickListener(v -> {
+            Toast.makeText(this, "Lịch sử đọc truyện clicked", Toast.LENGTH_SHORT).show();
+            // TODO: Navigate to ReadingHistoryActivity
+            // Intent intent = new Intent(HomeActivity.this, ReadingHistoryActivity.class);
+            // startActivity(intent);
+            dismissMenu();
+        });
+
+        menuView.findViewById(R.id.menu_logout).setOnClickListener(v -> {
+            logout();
+            dismissMenu();
+        });
+
+        int[] location = new int[2];
+        binding.bellButton.getLocationOnScreen(location);
+        popupWindow.showAtLocation(binding.getRoot(), Gravity.NO_GRAVITY, location[0], location[1] + binding.bellButton.getHeight());
+        isMenuShowing = true;
+
+        popupWindow.setOnDismissListener(() -> {
+            if (overlayView.getParent() != null) {
+                ((ViewGroup) overlayView.getParent()).removeView(overlayView);
+            }
+            isMenuShowing = false;
+        });
+    }
+
+    private void dismissMenu() {
+        if (popupWindow != null && popupWindow.isShowing()) {
+            popupWindow.dismiss();
+        }
+    }
+
+    private void logout() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+
+        Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+
+        Toast.makeText(this, "Đã đăng xuất", Toast.LENGTH_SHORT).show();
     }
 
     private void fetchNewBooks() {
@@ -247,5 +328,6 @@ public class HomeActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         bannerHandler.removeCallbacks(bannerRunnable);
+        dismissMenu();
     }
 }
