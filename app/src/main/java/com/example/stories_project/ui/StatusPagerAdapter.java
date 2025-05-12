@@ -1,4 +1,4 @@
-package com.example.stories_project.adapter;
+package com.example.stories_project.ui;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

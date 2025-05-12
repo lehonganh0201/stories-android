@@ -18,7 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.stories_project.MainActivity;
 import com.example.stories_project.R;
-import com.example.stories_project.adapter.StatusPagerAdapter;
+import com.example.stories_project.ui.StatusPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -101,10 +101,9 @@ public class StatusStoryListActivity extends AppCompatActivity {
         });
 
         menuView.findViewById(R.id.menu_reading_history).setOnClickListener(v -> {
-            Toast.makeText(this, "Lịch sử đọc truyện clicked", Toast.LENGTH_SHORT).show();
             // TODO: Navigate to ReadingHistoryActivity
-            // Intent intent = new Intent(StatusStoryListActivity.this, ReadingHistoryActivity.class);
-            // startActivity(intent);
+             Intent intent = new Intent(StatusStoryListActivity.this, ReadingHistoryActivity.class);
+             startActivity(intent);
             dismissMenu();
         });
 

@@ -1,5 +1,6 @@
 package com.example.stories_project.activity;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -28,7 +28,9 @@ import com.example.stories_project.model.ChapterImage;
 import com.example.stories_project.model.ChapterReader;
 import com.example.stories_project.network.RetrofitClient;
 import com.example.stories_project.network.request.ChapterRequest;
+import com.example.stories_project.network.request.UserHistoryRequest;
 import com.example.stories_project.network.response.ChapterResponse;
+import com.example.stories_project.network.response.UserStoryHistoryResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +44,7 @@ public class ChapterReaderActivity extends AppCompatActivity {
     private ImageAdapter imageAdapter;
     private static final String IMAGE_BASE_URL = "https://sv1.otruyencdn.com/";
     private static final String TAG = "ChapterReaderActivity";
+    private static final String PREF_NAME = "UserPrefs";
     private List<String> chapterPaths;
     private int currentChapterIndex;
     private String slugName;
@@ -90,6 +93,7 @@ public class ChapterReaderActivity extends AppCompatActivity {
                     currentChapterIndex = position;
                     fetchChapterDetails(chapterPaths.get(position));
                     binding.imageUrlRecyclerView.scrollToPosition(0);
+                    saveReadingHistory(position);
                 }
             }
 
@@ -103,6 +107,7 @@ public class ChapterReaderActivity extends AppCompatActivity {
                 binding.chapterSpinner.setSelection(currentChapterIndex);
                 fetchChapterDetails(chapterPaths.get(currentChapterIndex));
                 binding.imageUrlRecyclerView.scrollToPosition(0);
+                saveReadingHistory(currentChapterIndex);
             } else {
                 fetchNewChapters();
             }
@@ -114,6 +119,7 @@ public class ChapterReaderActivity extends AppCompatActivity {
                 binding.chapterSpinner.setSelection(currentChapterIndex);
                 fetchChapterDetails(chapterPaths.get(currentChapterIndex));
                 binding.imageUrlRecyclerView.scrollToPosition(0);
+                saveReadingHistory(currentChapterIndex);
             } else {
                 Toast.makeText(this, "Đây là chapter đầu tiên", Toast.LENGTH_SHORT).show();
             }
@@ -122,6 +128,38 @@ public class ChapterReaderActivity extends AppCompatActivity {
         binding.chapterName.setText("Đang tải...");
 
         fetchChapterDetails(chapterData);
+        saveReadingHistory(currentChapterIndex);
+    }
+
+    private void saveReadingHistory(int chapterIndex) {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        String username = prefs.getString("username", null);
+        if (username == null) {
+            Log.e(TAG, "Username not found in SharedPreferences");
+            Toast.makeText(this, "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int chapterNumber = chapterPaths.size() - chapterIndex;
+        UserHistoryRequest request = new UserHistoryRequest(username, slugName, chapterNumber);
+
+        RetrofitClient.getStoryApiService().saveUserHistory(request).enqueue(new Callback<ApiResponse<UserStoryHistoryResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<UserStoryHistoryResponse>> call, Response<ApiResponse<UserStoryHistoryResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && "SUCCESS".equals(response.body().getMeta().getStatus())) {
+                    Log.d(TAG, "Saved reading history for chapter: " + chapterNumber);
+                } else {
+                    Log.e(TAG, "Failed to save reading history: " + (response.message() != null ? response.message() : "Unknown error"));
+                    Toast.makeText(ChapterReaderActivity.this, "Không thể lưu lịch sử đọc", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<UserStoryHistoryResponse>> call, Throwable t) {
+                Log.e(TAG, "API call failed: " + t.getMessage());
+                Toast.makeText(ChapterReaderActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private List<String> getChapterNames() {
@@ -157,6 +195,7 @@ public class ChapterReaderActivity extends AppCompatActivity {
                                 binding.chapterSpinner.setSelection(currentChapterIndex);
                                 fetchChapterDetails(chapterPaths.get(currentChapterIndex));
                                 binding.imageUrlRecyclerView.scrollToPosition(0);
+                                saveReadingHistory(currentChapterIndex);
                             } else {
                                 Toast.makeText(ChapterReaderActivity.this, "Không có chapter mới", Toast.LENGTH_SHORT).show();
                             }

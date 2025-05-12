@@ -21,8 +21,10 @@ import com.example.stories_project.model.Chapter;
 import com.example.stories_project.model.Story;
 import com.example.stories_project.network.RetrofitClient;
 import com.example.stories_project.network.request.UserFavoriteRequest;
+import com.example.stories_project.network.request.UserHistoryRequest;
 import com.example.stories_project.network.response.ChapterResponse;
 import com.example.stories_project.network.response.UserStoryFavoriteResponse;
+import com.example.stories_project.network.response.UserStoryHistoryResponse;
 import com.example.stories_project.ui.ChapterAdapter;
 
 import java.util.ArrayList;
@@ -40,9 +42,10 @@ public class StoryDetailActivity extends AppCompatActivity {
     private List<String> chapterPaths = new ArrayList<>();
     private List<Chapter> chapters = new ArrayList<>();
     private boolean isFavorited = false;
-
     private static final String PREF_NAME = "UserPrefs";
     private static final String KEY_USERNAME = "username";
+    private String slugName;
+    private Integer lastReadChapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +56,14 @@ public class StoryDetailActivity extends AppCompatActivity {
         chapterAdapter = new ChapterAdapter(chapter -> {
             Intent intent = new Intent(StoryDetailActivity.this, ChapterReaderActivity.class);
             intent.putExtra("chapterData", chapter.getChapterApiData());
-            intent.putExtra("slugName", getIntent().getStringExtra("slugName"));
+            intent.putExtra("slugName", slugName);
             intent.putStringArrayListExtra("chapterPaths", new ArrayList<>(chapterPaths));
             startActivity(intent);
         });
         binding.chapterRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.chapterRecyclerView.setAdapter(chapterAdapter);
 
-        String slugName = getIntent().getStringExtra("slugName");
+        slugName = getIntent().getStringExtra("slugName");
         if (slugName == null) {
             Toast.makeText(this, "Không tìm thấy slugName", Toast.LENGTH_SHORT).show();
             finish();
@@ -70,20 +73,29 @@ public class StoryDetailActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String username = prefs.getString(KEY_USERNAME, "");
         if (username.isEmpty()) {
-            Toast.makeText(this, "Vui lòng đăng nhập để thích truyện!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng đăng nhập để sử dụng các tính năng!", Toast.LENGTH_SHORT).show();
+            binding.readButton.setEnabled(false);
+            binding.likeButton.setEnabled(false);
             return;
         }
 
         checkFavoriteStatus(username, slugName);
+        checkReadingHistory(username, slugName);
 
         binding.readButton.setOnClickListener(v -> {
-            if (!chapters.isEmpty()) {
-                Chapter firstChapter = chapters.get(0);
-                Intent intent = new Intent(StoryDetailActivity.this, ChapterReaderActivity.class);
-                intent.putExtra("chapterData", firstChapter.getChapterApiData());
-                intent.putExtra("slugName", slugName);
-                intent.putStringArrayListExtra("chapterPaths", new ArrayList<>(chapterPaths));
-                startActivity(intent);
+            if (!chapterPaths.isEmpty()) {
+                int chapterIndex = (lastReadChapter != null) ? (chapterPaths.size() - lastReadChapter) : 0;
+                if (chapterIndex >= 0 && chapterIndex < chapterPaths.size()) {
+                    String chapterData = chapterPaths.get(chapterIndex);
+                    saveReadingHistory(username, lastReadChapter != null ? lastReadChapter : 1);
+                    Intent intent = new Intent(StoryDetailActivity.this, ChapterReaderActivity.class);
+                    intent.putExtra("chapterData", chapterData);
+                    intent.putExtra("slugName", slugName);
+                    intent.putStringArrayListExtra("chapterPaths", new ArrayList<>(chapterPaths));
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "Chương không hợp lệ", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this, "Chưa có chapter nào", Toast.LENGTH_SHORT).show();
             }
@@ -179,6 +191,72 @@ public class StoryDetailActivity extends AppCompatActivity {
         });
     }
 
+    private void checkReadingHistory(String username, String slugName) {
+        binding.progressBar.setVisibility(View.VISIBLE);
+        UserHistoryRequest request = new UserHistoryRequest(username, slugName, null);
+        RetrofitClient.getStoryApiService().getLastReadChapter(request).enqueue(new Callback<ApiResponse<UserStoryHistoryResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<UserStoryHistoryResponse>> call, Response<ApiResponse<UserStoryHistoryResponse>> response) {
+                binding.progressBar.setVisibility(View.GONE);
+                if (response.isSuccessful() && response.body() != null && "SUCCESS".equals(response.body().getMeta().getStatus())) {
+                    UserStoryHistoryResponse history = response.body().getData();
+                    if (history != null && history.storySlug().equals(slugName)) {
+                        lastReadChapter = history.lastChapter();
+                        updateReadButton();
+                    } else {
+                        lastReadChapter = null;
+                        updateReadButton();
+                    }
+                } else {
+                    lastReadChapter = null;
+                    updateReadButton();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<UserStoryHistoryResponse>> call, Throwable t) {
+                binding.progressBar.setVisibility(View.GONE);
+                Log.e("StoryDetailActivity", "Failed to check reading history: " + t.getMessage());
+                lastReadChapter = null;
+                updateReadButton();
+            }
+        });
+    }
+
+    private void updateReadButton() {
+        if (chapterPaths.isEmpty()) {
+            binding.readButton.setText("Đọc truyện");
+            binding.readButton.setEnabled(false);
+            return;
+        }
+
+        binding.readButton.setEnabled(true);
+        if (lastReadChapter != null) {
+            binding.readButton.setText("Đọc tiếp chương " + lastReadChapter);
+        } else {
+            binding.readButton.setText("Đọc truyện");
+        }
+    }
+
+    private void saveReadingHistory(String username, int chapterNumber) {
+        UserHistoryRequest request = new UserHistoryRequest(username, slugName, chapterNumber);
+        RetrofitClient.getStoryApiService().saveUserHistory(request).enqueue(new Callback<ApiResponse<UserStoryHistoryResponse>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<UserStoryHistoryResponse>> call, Response<ApiResponse<UserStoryHistoryResponse>> response) {
+                if (!response.isSuccessful() || response.body() == null || !"SUCCESS".equals(response.body().getMeta().getStatus())) {
+                    Log.e("StoryDetailActivity", "Failed to save reading history: " + (response.message() != null ? response.message() : "Unknown error"));
+                    Toast.makeText(StoryDetailActivity.this, "Không thể lưu lịch sử đọc", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<UserStoryHistoryResponse>> call, Throwable t) {
+                Log.e("StoryDetailActivity", "API call failed: " + t.getMessage());
+                Toast.makeText(StoryDetailActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void fetchStoryDetails(String slugName) {
         binding.progressBar.setVisibility(View.VISIBLE);
         RetrofitClient.getStoryApiService().getStory(slugName).enqueue(new Callback<ApiResponse<Story>>() {
@@ -229,6 +307,7 @@ public class StoryDetailActivity extends AppCompatActivity {
                             }
                             java.util.Collections.reverse(chapterPaths);
                             Log.d("StoryDetailActivity", "Fetched chapterPaths: " + chapterPaths);
+                            updateReadButton();
                         }
                     }
                 }

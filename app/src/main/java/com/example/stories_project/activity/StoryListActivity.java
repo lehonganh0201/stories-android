@@ -155,10 +155,9 @@ public class StoryListActivity extends AppCompatActivity {
         });
 
         menuView.findViewById(R.id.menu_reading_history).setOnClickListener(v -> {
-            Toast.makeText(this, "Lịch sử đọc truyện clicked", Toast.LENGTH_SHORT).show();
             // TODO: Navigate to ReadingHistoryActivity
-            // Intent intent = new Intent(StoryListActivity.this, ReadingHistoryActivity.class);
-            // startActivity(intent);
+             Intent intent = new Intent(StoryListActivity.this, ReadingHistoryActivity.class);
+             startActivity(intent);
             dismissMenu();
         });
 
