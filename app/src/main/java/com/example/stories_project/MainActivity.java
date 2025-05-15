@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean isPasswordVisible = false;
     private static final String PREF_NAME = "UserPrefs";
     private static final String KEY_USERNAME = "username";
+    private static final String KEY_EMAIL = "email";
+
     private static final String KEY_PASSWORD = "password";
     private static final String KEY_REMEMBER = "remember";
 
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                         if (response.isSuccessful() && response.body() != null) {
                             ApiResponse<AccountResponse> apiResponse = response.body();
                             if ("SUCCESS".equals(apiResponse.getMeta().getStatus())) {
+                                saveCredentials(username, password, apiResponse.getData().getEmail());
                                 Toast.makeText(MainActivity.this, apiResponse.getMeta().getMessage(), Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                                 startActivity(intent);
@@ -126,6 +129,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void saveCredentials(String username, String password, String email) {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_USERNAME, username);
+        editor.putString(KEY_PASSWORD, password);
+        editor.putString(KEY_EMAIL, email);
+        editor.putBoolean(KEY_REMEMBER, true);
+        editor.apply();
     }
 
     private void loadSavedCredentials() {

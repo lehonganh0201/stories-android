@@ -138,10 +138,9 @@ public class FavoritesActivity extends AppCompatActivity {
         overlayView.setOnClickListener(v -> dismissMenu());
 
         menuView.findViewById(R.id.menu_account_info).setOnClickListener(v -> {
-            Toast.makeText(this, "Thông tin tài khoản clicked", Toast.LENGTH_SHORT).show();
             // TODO: Navigate to AccountInfoActivity
-            // Intent intent = new Intent(FavoritesActivity.this, AccountInfoActivity.class);
-            // startActivity(intent);
+             Intent intent = new Intent(FavoritesActivity.this, AccountInfoActivity.class);
+             startActivity(intent);
             dismissMenu();
         });
 

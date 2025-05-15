@@ -9,11 +9,13 @@ import com.example.stories_project.network.request.ForgotPasswordRequest;
 import com.example.stories_project.network.request.LoginRequest;
 import com.example.stories_project.network.request.RegisterRequest;
 import com.example.stories_project.network.request.ResetPasswordRequest;
+import com.example.stories_project.network.request.UpdateUserRequest;
 import com.example.stories_project.network.request.UserFavoriteRequest;
 import com.example.stories_project.network.request.UserHistoryRequest;
 import com.example.stories_project.network.request.VerifyOtpRequest;
 import com.example.stories_project.network.response.AccountResponse;
 import com.example.stories_project.network.response.ChapterResponse;
+import com.example.stories_project.network.response.UserResponse;
 import com.example.stories_project.network.response.UserStoryFavoriteResponse;
 import com.example.stories_project.network.response.UserStoryHistoryResponse;
 
@@ -24,6 +26,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -92,4 +95,10 @@ public interface StoryApiService {
 
     @POST("histories/last-read")
     Call<ApiResponse<UserStoryHistoryResponse>> getLastReadChapter(@Body UserHistoryRequest request);
+
+    @GET("users/{username}")
+    Call<ApiResponse<UserResponse>> getUserByUsername(@Path("username") String username);
+
+    @PUT("users/{username}")
+    Call<ApiResponse<UserResponse>> updateUserInfo(@Path("username") String username, @Body UpdateUserRequest request);
 }
