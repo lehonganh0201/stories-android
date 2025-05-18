@@ -5,5 +5,6 @@
         <domain includeSubdomains="true">192.168.1.100</domain>
         <domain includeSubdomains="true">img.otruyenapi.com</domain>
         <domain includeSubdomains="true">sv1.otruyencdn.com</domain>
+        <domain includeSubdomains="true">res.cloudinary.com</domain>
     </domain-config>
 </network-security-config>

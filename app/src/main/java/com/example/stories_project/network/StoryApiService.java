@@ -21,12 +21,14 @@ import com.example.stories_project.network.response.UserStoryHistoryResponse;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
-import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -101,4 +103,11 @@ public interface StoryApiService {
 
     @PUT("users/{username}")
     Call<ApiResponse<UserResponse>> updateUserInfo(@Path("username") String username, @Body UpdateUserRequest request);
+
+    @Multipart
+    @PUT("users/upload")
+    Call<ApiResponse<UserResponse>> uploadAvatar(
+            @Part("username") String username,
+            @Part MultipartBody.Part file
+    );
 }

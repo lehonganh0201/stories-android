@@ -4,6 +4,7 @@ public record UserResponse(
         String fullName,
         String phoneNumber,
         String dateOfBirth,
-        String gender
+        String gender,
+        String avatarUrl
 ) {
 }

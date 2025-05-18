@@ -17,6 +17,35 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
+    <!-- Avatar Container -->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp">
+
+        <!-- Circular Avatar -->
+        <ImageView
+            android:id="@+id/avatarImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/default_avatar_male"
+            android:scaleType="centerCrop"
+            android:contentDescription="User Avatar"
+            android:background="@drawable/circle_background" />
+
+        <!-- Plus Button -->
+        <ImageView
+            android:id="@+id/plusButton"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="end|top"
+            android:src="@drawable/ic_plus"
+            android:background="@drawable/circle_plus_background"
+            android:contentDescription="Change Avatar"
+            android:padding="4dp" />
+    </FrameLayout>
+
     <!-- Full Name -->
     <LinearLayout
         android:layout_width="match_parent"

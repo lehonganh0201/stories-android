@@ -9,8 +9,7 @@
     android:orientation="vertical"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    android:paddingTop="16dp"
-    android:paddingEnd="16dp">
+    android:paddingTop="16dp">
 
     <!-- Header: Tiêu đề, tìm kiếm, chuông thông báo -->
     <LinearLayout
@@ -36,8 +35,8 @@
 
         <ImageButton
             android:id="@+id/searchButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:background="@drawable/search"
             android:contentDescription="Tìm kiếm"
             android:padding="12dp" />
