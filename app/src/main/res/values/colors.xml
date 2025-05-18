@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
+    <color name="black">#FF313131</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="primary">#FF6CBDFF</color>
+    <color name="secondary">#FF4D7494</color>
     <color name="category_color_1">#FF6F61</color> <!-- Đỏ san hô -->
-    <color name="category_color_2">#6B728E</color> <!-- Xám xanh -->
+    <color name="category_color_2">#889FF4</color> <!-- Xám xanh -->
     <color name="category_color_3">#FFD166</color> <!-- Vàng -->
-    <color name="category_color_4">#06D6A0</color> <!-- Xanh ngọc -->
-    <color name="category_color_5">#118AB2</color> <!-- Xanh dương -->
-    <color name="category_color_6">#EF476F</color> <!-- Hồng -->
+    <color name="category_color_4">#16D9A6</color> <!-- Xanh ngọc -->
+    <color name="category_color_5">#1BB8ED</color> <!-- Xanh dương -->
+    <color name="category_color_6">#F47392</color> <!-- Hồng -->
     <color name="favorite_active_tint">#FF0000</color> <!-- Màu đỏ cho ic_favorite_active -->
     <color name="favorite_default_tint">#FFFFFF</color> <!-- Màu trắng cho ic_favorite_default -->
 </resources>

@@ -46,11 +46,10 @@ public class CategoryListActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         categoryAdapter = new CategoryListAdapter(category -> {
-            Toast.makeText(this, "Đã chọn thể loại: " + category.getName(), Toast.LENGTH_SHORT).show();
             // TODO: Navigate to category-specific activity if needed
-            // Intent intent = new Intent(CategoryListActivity.this, StoryListActivity.class);
-            // intent.putExtra("categorySlug", category.getSlug());
-            // startActivity(intent);
+             Intent intent = new Intent(CategoryListActivity.this, StoryListActivity.class);
+             intent.putExtra("categorySlug", category.getSlug());
+             startActivity(intent);
         });
 
         FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
@@ -88,10 +87,9 @@ public class CategoryListActivity extends AppCompatActivity {
         overlayView.setOnClickListener(v -> dismissMenu());
 
         menuView.findViewById(R.id.menu_account_info).setOnClickListener(v -> {
-            Toast.makeText(this, "Thông tin tài khoản clicked", Toast.LENGTH_SHORT).show();
             // TODO: Navigate to AccountInfoActivity
-            // Intent intent = new Intent(CategoryListActivity.this, AccountInfoActivity.class);
-            // startActivity(intent);
+             Intent intent = new Intent(CategoryListActivity.this, AccountInfoActivity.class);
+             startActivity(intent);
             dismissMenu();
         });
 

@@ -5,8 +5,7 @@
     android:layout_width="160dp"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="8dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,34 +15,36 @@
         <ImageView
             android:id="@+id/storyThumbnail"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="132dp"
+            android:background="@android:color/transparent"
             android:scaleType="centerCrop"
-            android:visibility="visible"
-            android:background="@android:color/transparent" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:paddingLeft="8dp"
+            android:paddingTop="12dp"
+            android:paddingRight="8dp"
+            android:paddingBottom="12dp">
 
             <TextView
                 android:id="@+id/storyName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:paddingTop="8dp"
+                android:ellipsize="end"
                 android:maxLines="1"
-                android:ellipsize="end" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/storyCategories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
+                android:ellipsize="end"
                 android:maxLines="1"
-                android:ellipsize="end" />
+                android:textSize="12sp" />
 
         </LinearLayout>
     </LinearLayout>

@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
+    android:background="@color/white"
     tools:context=".activity.AccountInfoActivity">
 
     <!-- ProgressBar -->
@@ -123,7 +124,7 @@
         android:layout_marginTop="8dp"
         android:text="Chỉnh sửa thông tin"
         android:textSize="16sp"
-        android:textColor="@android:color/holo_blue_dark"
+        android:textColor="@color/primary"
         android:drawableStart="@drawable/ic_edit"
         android:drawablePadding="4dp"
         android:paddingStart="116dp"

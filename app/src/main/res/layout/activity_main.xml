@@ -1,26 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="#F5F5F5">
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="297dp"
+        app:srcCompat="@drawable/_343845" />
 
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="377dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="0dp"
+        android:gravity="center"
         android:text="Đăng Nhập"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:textColor="#000000" />
+        android:textColor="@color/black" />
 
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvTitle"
         android:layout_marginTop="40dp"
         android:hint="Tên đăng nhập"
         android:padding="12dp"
@@ -31,7 +39,6 @@
         android:id="@+id/passwordContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etUsername"
         android:layout_marginTop="20dp">
 
         <EditText
@@ -58,8 +65,7 @@
         android:id="@+id/cbRememberMe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/passwordContainer"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
         android:text="Nhớ tôi"
         android:checked="false" />
 
@@ -67,7 +73,6 @@
         android:id="@+id/btnLogin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cbRememberMe"
         android:layout_marginTop="20dp"
         android:text="Đăng Nhập"
         android:backgroundTint="#2196F3"
@@ -76,23 +81,21 @@
 
     <TextView
         android:id="@+id/tvRegister"
-        android:layout_width="wrap_content"
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/btnLogin"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:gravity="center"
         android:text="Chưa có tài khoản? Đăng ký"
         android:textColor="#2196F3"
         android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tvForgotPassword"
-        android:layout_width="wrap_content"
+        android:layout_width="381dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvRegister"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
         android:text="Quên mật khẩu?"
         android:textColor="#2196F3"
         android:textSize="16sp" />
-</RelativeLayout>
+</LinearLayout>

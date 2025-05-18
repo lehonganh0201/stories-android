@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="#F5F5F5">
+    android:background="@color/white"
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -12,9 +12,9 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:text="Xác Minh OTP"
+        android:textColor="@color/black"
         android:textSize="28sp"
-        android:textStyle="bold"
-        android:textColor="#000000" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvMessage"

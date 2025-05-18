@@ -10,7 +10,7 @@
     <!-- Thumbnail bên trái -->
     <ImageView
         android:id="@+id/bannerThumbnail"
-        android:layout_width="100dp"
+        android:layout_width="139dp"
         android:layout_height="match_parent"
         android:scaleType="centerCrop"
         android:contentDescription="Ảnh banner"

@@ -6,8 +6,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="#F5F5F5"
+    tools:background="@color/white"
     tools:context=".activity.EditAccountInfoActivity">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="Sửa thông tin tài khoản"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
     <!-- ProgressBar -->
     <ProgressBar
@@ -31,7 +43,7 @@
             android:text="Họ và tên:"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/fullName"
@@ -59,7 +71,7 @@
             android:text="Số điện thoại:"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/phoneNumber"
@@ -87,7 +99,7 @@
             android:text="Ngày sinh:"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/black" />
 
         <EditText
             android:id="@+id/dateOfBirth"
@@ -117,7 +129,7 @@
             android:text="Giới tính:"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/black" />
 
         <Spinner
             android:id="@+id/gender"
@@ -150,9 +162,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:backgroundTint="#2196F3"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             android:text="Lưu"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@android:color/holo_blue_dark" />
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 </LinearLayout>
