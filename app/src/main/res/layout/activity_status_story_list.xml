@@ -40,11 +40,9 @@
 
         <ImageButton
             android:id="@+id/bellButton"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:src="@drawable/circle_avatar"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Thông báo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_tree"
             android:padding="12dp"
             android:scaleType="centerCrop" />
 
